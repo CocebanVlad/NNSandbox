@@ -1,19 +1,54 @@
-﻿// See https://aka.ms/new-console-template for more information
-
-using NNSandbox;
+﻿using NNSandbox;
 
 Console.WriteLine("Hello, World!");
 
-var nn = new NN(new[] { 2, 3, 2 });
+var data = new List<NN.TrainEntry>();
+var bit = new float[] { 0.1f, 1.0f };
 
-for (var i = 0; i < 2; i++)
+for (var i = 0; i < 1; i++)
 {
-    nn.Train(new float[] { 1, 1 }, new float[] { 1, 0 });
-    nn.Train(new float[] { 0, 1 }, new float[] { 0, 1 });
-    nn.Train(new float[] { 1, 0 }, new float[] { 0, 1 });
-    nn.Train(new float[] { 0, 0 }, new float[] { 0, 1 });
+    data.Add(new(new float[] { bit[0], bit[0], bit[0] }, new float[] { bit[0] }));
+    data.Add(new(new float[] { bit[0], bit[1], bit[0] }, new float[] { bit[1] }));
+    data.Add(new(new float[] { bit[1], bit[0], bit[0] }, new float[] { bit[1] }));
+    data.Add(new(new float[] { bit[1], bit[1], bit[0] }, new float[] { bit[1] }));
+    data.Add(new(new float[] { bit[0], bit[0], bit[1] }, new float[] { bit[0] }));
+    data.Add(new(new float[] { bit[0], bit[1], bit[1] }, new float[] { bit[0] }));
+    data.Add(new(new float[] { bit[1], bit[0], bit[1] }, new float[] { bit[0] }));
+    data.Add(new(new float[] { bit[1], bit[1], bit[1] }, new float[] { bit[1] }));
 }
 
-var result = nn.Test(new float[] { 1, 1 });
+var nn = new NN(new[] { 3, 6, 9, 6, 1 });
+
+for (var i = 0; i < 10000; i++)
+{
+    nn.Train(data);
+
+    if (i % 100 != 0)
+    {
+        continue;
+    }
+
+    Console.WriteLine("Epoch " + i);
+
+    Console.WriteLine("0 or 0");
+    Utils.PrintArray(nn.Test(new float[] { bit[0], bit[0], bit[0] })[^1]);
+
+    Console.WriteLine("0 or 1");
+    Utils.PrintArray(nn.Test(new float[] { bit[0], bit[1], bit[0] })[^1]);
+
+    //Console.WriteLine("1 or 1");
+    //Utils.PrintArray(nn.Test(new float[] { bit[1], bit[1], bit[0] }));
+
+    //Console.WriteLine("0 and 0");
+    //Utils.PrintArray(nn.Test(new float[] { bit[0], bit[0], bit[1] }));
+
+    //Console.WriteLine("0 and 1");
+    //Utils.PrintArray(nn.Test(new float[] { bit[0], bit[1], bit[1] }));
+
+    //Console.WriteLine("1 and 1");
+    //Utils.PrintArray(nn.Test(new float[] { bit[1], bit[1], bit[1] }));
+
+    Console.WriteLine(new string('-', 10));
+}
 
 Console.WriteLine();
