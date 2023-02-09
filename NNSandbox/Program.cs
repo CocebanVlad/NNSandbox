@@ -2,7 +2,7 @@
 
 Console.WriteLine("Hello, World!");
 
-var data = new List<NN.TrainEntry>();
+var data = new List<NeuralNetwork.TrainingDataSetEntry>();
 var bit = new float[] { 0.1f, 1.0f };
 
 for (var i = 0; i < 1; i++)
@@ -17,7 +17,7 @@ for (var i = 0; i < 1; i++)
     data.Add(new(new float[] { bit[1], bit[1], bit[1] }, new float[] { bit[1] }));
 }
 
-var nn = new NN(new[] { 3, 6, 9, 6, 1 });
+var nn = new NeuralNetwork(new[] { 3, 6, 9, 6, 1 });
 
 for (var i = 0; i < 10000; i++)
 {

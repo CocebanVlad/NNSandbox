@@ -1,6 +1,6 @@
 ﻿namespace NNSandbox;
 
-internal class NN
+internal partial class NeuralNetwork
 {
     private static readonly Random _random = new();
 
@@ -10,7 +10,7 @@ internal class NN
     private readonly float _learningRate;
     private readonly float _weightDecay;
 
-    public NN(int[] structure, float learningRate = 1f, float weightDecay = 0.001f)
+    public NeuralNetwork(int[] structure, float learningRate = 1f, float weightDecay = 0.001f)
     {
         _structure = structure;
         _biases = CreateBiasesArray(_structure);
@@ -35,17 +35,17 @@ internal class NN
         return values;
     }
 
-    public void Train(List<TrainEntry> data)
+    public void Train(TrainingDataSet dataSet)
     {
         var biasesSmudge = CreateBiasesSmudgeArray(_biases);
         var weightsSmudge = CreateWeightsSmudgeArray(_weights);
 
-        for (var i = 0; i < data.Count; i++)
+        for (var i = 0; i < dataSet.Count; i++)
         {
-            var values = Test(data[i].Inputs);
+            var values = Test(dataSet[i].Inputs);
 
             var expectedValues = CloneValuesArray(values);
-            SetOutputs(expectedValues, data[i].ExpectedOutputs);
+            SetOutputs(expectedValues, dataSet[i].ExpectedOutputs);
 
             for (var l = values.Length - 1; l >= 1; l--)
             {
@@ -80,18 +80,6 @@ internal class NN
                 }
             }
         }
-    }
-
-    public record TrainEntry
-    {
-        public TrainEntry(float[] inputs, float[] expectedOutputs)
-        {
-            Inputs = inputs;
-            ExpectedOutputs = expectedOutputs;
-        }
-
-        public float[] Inputs { get; }
-        public float[] ExpectedOutputs { get; }
     }
 
     private static T[] Array<T>(int size, Func<T> value) => Enumerable.Range(0, size).Select(_ => value()).ToArray();
